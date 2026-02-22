@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akdeniz İnteraktif Haritası</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* CSS AYARLARI */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Sağ üstteki Logo Konteynırı */
+        #logo-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            pointer-events: none; /* Haritaya tıklamaya engel olmaz */
+            background: rgba(255, 255, 255, 0.8); /* Logonun arkasına hafif beyazlık */
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .navy-logo {
+            width: 100px; /* Logonu buradan boyutlandırabilirsin */
+            height: auto;
+            display: block;
+        }
+
+        /* Bilgi Kutucuğu (Popup) Stili */
+        .leaflet-popup-content-wrapper {
+            background: #1a2a44; /* Lacivert tonları */
+            color: white;
+            border-radius: 5px;
+        }
+        .leaflet-popup-tip {
+            background: #1a2a44;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="logo-container">
+        <img src="logo.png" alt="Deniz Kuvvetleri Logosu" class="navy-logo" onerror="this.alt='Logo Yüklenemedi';">
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // JAVASCRIPT AYARLARI
+        
+        // Haritayı Akdeniz'in merkezine (35, 20) ve uygun bir zoom seviyesine (5) odakla
+        var map = L.map('map').setView([35.0, 20.0], 5);
+
+        // Harita alt tabanını (TileLayer) ekle - OpenStreetMap (Dark) versiyonu daha askeri durabilir
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors | Deniz Kuvvetleri Akdeniz İzleme'
+        }).addTo(map);
+
+        // Akdeniz'e kıyısı olan ülkelerin listesi (Koordinatlar yaklaşıktır)
+        const coastalCountries = [
+            { name: "Türkiye", coords: [36.5, 32.5], info: "Mavi Vatan" },
+            { name: "KKTC", coords: [35.1, 33.3], info: "Yavru Vatan" },
+            { name: "Yunanistan", coords: [37.9, 23.7], info: "" },
+            { name: "İtalya", coords: [40.8, 14.2], info: "" },
+            { name: "Mısır", coords: [31.2, 29.9], info: "" },
+            { name: "Libya", coords: [32.8, 13.1], info: "" },
+            { name: "İspanya", coords: [36.7, -4.4], info: "" },
+            { name: "Fransa", coords: [43.2, 5.3], info: "" },
+            { name: "Cezayir", coords: [36.7, 3.0], info: "" }
+        ];
+
+        // Her ülke için bir işaretçi (marker) ekle
+        coastalCountries.forEach(country => {
+            var marker = L.marker(country.coords).addTo(map);
+            marker.bindPopup(`<b>${country.name}</b><br>${country.info || 'Akdeniz Kıyısı'}`);
+        });
+
+        // Haritaya tıklayınca koordinat veren fonksiyon (Geliştirme için kolaylık sağlar)
+        map.on('click', function(e) {
+            console.log("Tıklanan Koordinat: " + e.latlng.lat + ", " + e.latlng.lng);
+        });
+    </script>
+</body>
+</html>

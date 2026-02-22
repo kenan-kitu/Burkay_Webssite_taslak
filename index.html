@@ -86,7 +86,7 @@
             { name: "Cezayir", coords: [36.7, 3.0], info: "" }
         ];
 
-        // Her ülke için bir işaretçi (marker) ekle
+        // Her ülke için bir işaretçi (marker) ekle 
         coastalCountries.forEach(country => {
             var marker = L.marker(country.coords).addTo(map);
             marker.bindPopup(`<b>${country.name}</b><br>${country.info || 'Akdeniz Kıyısı'}`);
